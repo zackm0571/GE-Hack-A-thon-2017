@@ -11,7 +11,10 @@
 @import SocketIO;
 @interface ViewController ()
 @end
-
+#define LOCATION_REQUEST_EVENT @"location"
+#define LOCATION_CHANNEL @"location"
+#define CONNECT_EVENT @"connect"
+#define SERVER_URL @"https://forte9293.ngrok.io/"
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -32,7 +35,7 @@
 
 
 -(void)initSocket{
-    NSURL* url = [[NSURL alloc] initWithString:@"https://forte9293.ngrok.io/"];
+    NSURL* url = [[NSURL alloc] initWithString:SERVER_URL];
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
     NSString *location = [LocationManager sharedManager].currentLocationAsText;
@@ -54,15 +57,15 @@
             }
         }
         
-        [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        [socket on:CONNECT_EVENT callback:^(NSArray* data, SocketAckEmitter* ack) {
             NSLog(@"socket connected");
-            [[socket emitWithAck:@"location" with:@[@(reverseLocation.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
+            [[socket emitWithAck:LOCATION_CHANNEL with:@[@(reverseLocation.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
                 NSLog(@"Location Response: %@", [data debugDescription]);
             }];
         }];
-        
-        
     }];
+    
+    
     
     [socket connect];
 }
