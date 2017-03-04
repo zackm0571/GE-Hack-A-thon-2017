@@ -36,13 +36,24 @@
 }
 
 
+-(void)log:(NSString*)text{
+    NSString *currentText = self.textViewLogger.text;
+    currentText = [[currentText stringByAppendingString:text] stringByAppendingString:@"\n"];
+    [self.textViewLogger setText:currentText];
+    if(currentText.length > 0 ) {
+        NSRange range = NSMakeRange(currentText.length-1, 1);
+        [self.textViewLogger scrollRangeToVisible:range];
+    }
+}
 -(void)initSocket{
+    [self log:[NSString stringWithFormat:@"Connecting to %@", SERVER_URL]];
+    
     NSURL* url = [[NSURL alloc] initWithString:SERVER_URL];
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
     NSString *location = [LocationManager sharedManager].currentLocationAsText;
     NSLog(@"location: %@", location);
-    
+    [self log:[NSString stringWithFormat:@"Discovered location: %@", location]];
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
     [geocoder reverseGeocodeLocation:[[LocationManager sharedManager] getLocation] completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
@@ -59,9 +70,13 @@
             }
         }
         
+        [self log:[NSString stringWithFormat:@"Reverse geo location: %@", reverseLocation]];
+        
         [socket on:LOCATION_REQUEST_EVENT callback:^(NSArray* data, SocketAckEmitter* ack) {
+            [self log:@"Received location request from GM OTTO vehicle"];
             NSLog(@"socket connected");
             [[socket emitWithAck:LOCATION_CHANNEL with:@[@(reverseLocation.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
+                [self log:[NSString stringWithFormat:@"Received %@", SERVER_URL]];
                 NSLog(@"Location Response: %@", [data debugDescription]);
             }];
         }];
@@ -69,6 +84,9 @@
     
     
     [socket connect];
+    
+    [self log:[NSString stringWithFormat:@"Connected to %@", SERVER_URL]];
+    NSLog(@"socket connected");
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
