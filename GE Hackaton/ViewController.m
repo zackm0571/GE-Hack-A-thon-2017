@@ -36,10 +36,10 @@
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
     NSString *location = [LocationManager sharedManager].currentLocationAsText;
-    
     NSLog(@"location: %@", location);
     
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    
     [geocoder reverseGeocodeLocation:[[LocationManager sharedManager] getLocation] completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         if(!placemarks) return;
         NSString *reverseLocation = @"";
@@ -53,24 +53,21 @@
                 reverseLocation = [[reverseLocation stringByAppendingString:string] stringByAppendingString: @" "];
             }
         }
-    }];
-    
-    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        NSLog(@"socket connected");
-        [[socket emitWithAck:@"location" with:@[@(location.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
-            NSLog(@"Location Response: %@", [data debugDescription]);
+        
+        [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+            NSLog(@"socket connected");
+            [[socket emitWithAck:@"location" with:@[@(reverseLocation.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
+                NSLog(@"Location Response: %@", [data debugDescription]);
+            }];
         }];
         
         
-        //    [socket emit:@"query" with:@[@{@"amount": @(cur + 2.50)}]];
-        
-        
     }];
+    
     [socket connect];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
