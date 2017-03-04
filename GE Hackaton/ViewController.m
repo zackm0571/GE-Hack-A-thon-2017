@@ -7,9 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "LocationManager.h"
 @import SocketIO;
 @interface ViewController ()
-
 @end
 
 @implementation ViewController
@@ -17,27 +17,50 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [[LocationManager sharedManager] startMonitoring];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    
+}
+- (IBAction)onButtonClick:(id)sender {
+    [self initSocket];
 }
 
 
 -(void)initSocket{
-    NSURL* url = [[NSURL alloc] initWithString:@"http://localhost:8080"];
+    NSURL* url = [[NSURL alloc] initWithString:@"https://forte9293.ngrok.io/"];
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
-    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        NSLog(@"socket connected");
-    }];
-    
-    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        double cur = [[data objectAtIndex:0] floatValue];
-        
-        [[socket emitWithAck:@"canUpdate" with:@[@(cur)]] timingOutAfter:0 callback:^(NSArray* data) {
-            [socket emit:@"update" with:@[@{@"amount": @(cur + 2.50)}]];
+//    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+//        NSLog(@"socket connected");
+//        
+//        
+//        //    [socket emit:@"query" with:@[@{@"amount": @(cur + 2.50)}]];
+//        
+//        
+//    }];
+     NSString *location = [LocationManager sharedManager].currentLocationAsText;
+    NSLog(@"Location: %@", location);
+    [socket on:@"location" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        [[socket emitWithAck:@"location" with:@[@(location.UTF8String)]] timingOutAfter:0 callback:^(NSArray* data) {
+            NSLog(@"Location Response: %@", [data debugDescription]);
         }];
         
-        [ack with:@[@"Got your currentAmount, ", @"dude"]];
     }];
+        //[socket  emit:@"pong" with:@[@{@"query": @"Suh dude"}]];
     
+//    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
+//        double cur = [[data objectAtIndex:0] floatValue];
+//
+
+// [socket emit:@"pong" with:@[@{@"dude": @(cur + 2.50)}]];
+//        [ack with:@[@"Got your currentAmount, ", @"dude"]];
+//    }];
+//    
     [socket connect];
 }
 - (void)didReceiveMemoryWarning {
