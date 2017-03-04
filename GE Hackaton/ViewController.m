@@ -35,22 +35,29 @@
     NSURL* url = [[NSURL alloc] initWithString:@"https://forte9293.ngrok.io/"];
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
-//    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-//        NSLog(@"socket connected");
-//        
-//        
-//        //    [socket emit:@"query" with:@[@{@"amount": @(cur + 2.50)}]];
-//        
-//        
-//    }];
-     NSString *location = [LocationManager sharedManager].currentLocationAsText;
-    NSLog(@"Location: %@", location);
-    [socket on:@"location" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        [[socket emitWithAck:@"location" with:@[@(location.UTF8String)]] timingOutAfter:0 callback:^(NSArray* data) {
+    NSString *location = [LocationManager sharedManager].currentLocationAsText;
+    NSLog(@"location: %@", location);
+    
+    
+    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        NSLog(@"socket connected");
+        [[socket emitWithAck:@"location" with:@[@(location.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
             NSLog(@"Location Response: %@", [data debugDescription]);
         }];
         
+        
+        //    [socket emit:@"query" with:@[@{@"amount": @(cur + 2.50)}]];
+        
+        
     }];
+
+//    [socket on:@"location" callback:^(NSArray* data, SocketAckEmitter* ack) {
+//        
+//        [[socket emitWithAck:@"location" with:@[@(location.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
+//            NSLog(@"Location Response: %@", [data debugDescription]);
+//        }];
+//        
+//    }];
         //[socket  emit:@"pong" with:@[@{@"query": @"Suh dude"}]];
     
 //    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
