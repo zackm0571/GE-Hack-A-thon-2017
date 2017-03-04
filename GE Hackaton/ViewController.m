@@ -11,9 +11,10 @@
 @import SocketIO;
 @interface ViewController ()
 @end
-#define LOCATION_REQUEST_EVENT @"location"
-#define LOCATION_CHANNEL @"location"
+#define LOCATION_REQUEST_EVENT @"location_request"
+#define LOCATION_CHANNEL @"location_request"
 #define CONNECT_EVENT @"connect"
+#define REVERSE_GEO_ADDRESS_DICT_KEY @"FormattedAddressLines"
 #define SERVER_URL @"https://forte9293.ngrok.io/"
 @implementation ViewController
 
@@ -51,7 +52,7 @@
             NSLog(@"Placemark: %@", [placeMark debugDescription]);
             NSLog(@"Address: %@", [[placeMark addressDictionary] debugDescription]);
             
-            for(NSString *string in [[placeMark addressDictionary] objectForKey:@"FormattedAddressLines"]){
+            for(NSString *string in [[placeMark addressDictionary] objectForKey:REVERSE_GEO_ADDRESS_DICT_KEY]){
                 NSLog(@"STRING: %@", string);
                 reverseLocation = [[reverseLocation stringByAppendingString:string] stringByAppendingString: @" "];
             }
