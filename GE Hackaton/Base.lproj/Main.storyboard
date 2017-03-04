@@ -38,38 +38,38 @@
                                     <constraint firstAttribute="width" constant="153" id="6l7-uL-kYQ"/>
                                     <constraint firstAttribute="height" constant="30" id="GO6-Sj-fNu"/>
                                 </constraints>
-                                <state key="normal" title="My Location">
+                                <state key="normal" title="Connect">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="onButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rzA-qm-aFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2SZ-Yt-7UH">
-                                <rect key="frame" x="111" y="318" width="153" height="30"/>
-                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="LOGGING:" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Cqi-vf-QwL">
+                                <rect key="frame" x="0.0" y="359" width="375" height="288"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="S8A-xu-84V"/>
-                                    <constraint firstAttribute="width" constant="153" id="yb0-N3-dm8"/>
+                                    <constraint firstAttribute="height" constant="288" id="Cw4-Mp-Eg4"/>
                                 </constraints>
-                                <state key="normal" title="GM Headquarters">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bLA-rf-CQ3"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="19D-bG-FSf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="04K-Bp-gvy"/>
-                            <constraint firstItem="2SZ-Yt-7UH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GXb-He-l2r"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Cqi-vf-QwL" secondAttribute="bottom" constant="20" id="0WI-wb-tzP"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Cqi-vf-QwL" secondAttribute="bottom" constant="20" id="37T-R1-8s4"/>
+                            <constraint firstItem="Cqi-vf-QwL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3V9-Bc-xcc"/>
+                            <constraint firstItem="Cqi-vf-QwL" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Nas-Gf-Ekb"/>
                             <constraint firstItem="y1d-hb-9B3" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Okk-Le-v0F"/>
                             <constraint firstItem="19D-bG-FSf" firstAttribute="top" secondItem="y1d-hb-9B3" secondAttribute="bottom" constant="148" id="SLF-56-tkZ"/>
-                            <constraint firstItem="2SZ-Yt-7UH" firstAttribute="top" secondItem="19D-bG-FSf" secondAttribute="bottom" constant="54" id="fbf-4f-goR"/>
                             <constraint firstItem="y1d-hb-9B3" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="30" id="yGw-O3-NPj"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="textViewLogger" destination="Cqi-vf-QwL" id="S1b-SM-0g8"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
