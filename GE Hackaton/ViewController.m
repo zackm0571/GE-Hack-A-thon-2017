@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+@import SocketIO;
 @interface ViewController ()
 
 @end
@@ -20,6 +20,26 @@
 }
 
 
+-(void)initSocket{
+    NSURL* url = [[NSURL alloc] initWithString:@"http://localhost:8080"];
+    SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
+    
+    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        NSLog(@"socket connected");
+    }];
+    
+    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        double cur = [[data objectAtIndex:0] floatValue];
+        
+        [[socket emitWithAck:@"canUpdate" with:@[@(cur)]] timingOutAfter:0 callback:^(NSArray* data) {
+            [socket emit:@"update" with:@[@{@"amount": @(cur + 2.50)}]];
+        }];
+        
+        [ack with:@[@"Got your currentAmount, ", @"dude"]];
+    }];
+    
+    [socket connect];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
