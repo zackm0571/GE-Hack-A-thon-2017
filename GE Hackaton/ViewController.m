@@ -38,7 +38,7 @@
 
 -(void)log:(NSString*)text{
     NSString *currentText = self.textViewLogger.text;
-    currentText = [[@"\n" stringByAppendingString:[currentText stringByAppendingString:text]] stringByAppendingString:@"\n"];
+    currentText = [[currentText stringByAppendingString:text] stringByAppendingString:@"\n"];
     [self.textViewLogger setText:currentText];
     if(currentText.length > 0 ) {
         NSRange range = NSMakeRange(currentText.length-1, 1);
