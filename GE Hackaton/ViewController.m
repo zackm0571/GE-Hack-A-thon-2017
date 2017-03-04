@@ -16,6 +16,7 @@
 #define CONNECT_EVENT @"connect"
 #define REVERSE_GEO_ADDRESS_DICT_KEY @"FormattedAddressLines"
 #define SERVER_URL @"https://forte9293.ngrok.io/"
+
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -58,14 +59,13 @@
             }
         }
         
-        [socket on:CONNECT_EVENT callback:^(NSArray* data, SocketAckEmitter* ack) {
+        [socket on:LOCATION_REQUEST_EVENT callback:^(NSArray* data, SocketAckEmitter* ack) {
             NSLog(@"socket connected");
             [[socket emitWithAck:LOCATION_CHANNEL with:@[@(reverseLocation.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
                 NSLog(@"Location Response: %@", [data debugDescription]);
             }];
         }];
     }];
-    
     
     
     [socket connect];
