@@ -15,4 +15,5 @@
 -(BOOL)isAuthorized:(BOOL)askUserIfUnknown;
 +(LocationManager *)sharedManager;
 -(BOOL)locationPlausible;
+- (CLLocation*)getLocation;
 @end

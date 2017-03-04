@@ -36,8 +36,24 @@
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
     NSString *location = [LocationManager sharedManager].currentLocationAsText;
+    
     NSLog(@"location: %@", location);
     
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    [geocoder reverseGeocodeLocation:[[LocationManager sharedManager] getLocation] completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        if(!placemarks) return;
+        NSString *reverseLocation = @"";
+        for(CLPlacemark *placeMark in placemarks){
+            if(!placeMark || ![placeMark addressDictionary]) return;
+            NSLog(@"Placemark: %@", [placeMark debugDescription]);
+            NSLog(@"Address: %@", [[placeMark addressDictionary] debugDescription]);
+            
+            for(NSString *string in [[placeMark addressDictionary] objectForKey:@"FormattedAddressLines"]){
+                NSLog(@"STRING: %@", string);
+                reverseLocation = [[reverseLocation stringByAppendingString:string] stringByAppendingString: @" "];
+            }
+        }
+    }];
     
     [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
         NSLog(@"socket connected");
@@ -50,24 +66,6 @@
         
         
     }];
-
-//    [socket on:@"location" callback:^(NSArray* data, SocketAckEmitter* ack) {
-//        
-//        [[socket emitWithAck:@"location" with:@[@(location.UTF8String)]] timingOutAfter:5 callback:^(NSArray* data) {
-//            NSLog(@"Location Response: %@", [data debugDescription]);
-//        }];
-//        
-//    }];
-        //[socket  emit:@"pong" with:@[@{@"query": @"Suh dude"}]];
-    
-//    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
-//        double cur = [[data objectAtIndex:0] floatValue];
-//
-
-// [socket emit:@"pong" with:@[@{@"dude": @(cur + 2.50)}]];
-//        [ack with:@[@"Got your currentAmount, ", @"dude"]];
-//    }];
-//    
     [socket connect];
 }
 - (void)didReceiveMemoryWarning {

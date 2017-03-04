@@ -76,6 +76,9 @@
     return self.locationManager.location;
 }
 
+- (CLLocation*)getLocation{
+    return self.locationManager.location;
+}
 - (NSString*)currentLocationAsText{
     NSMutableDictionary *locationJson = [[NSMutableDictionary alloc] init];
     
